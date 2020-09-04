@@ -7,12 +7,12 @@ import java.util.List;
 import java.util.Stack;
 
 /**
- * Implementation of a generic Binary Search Tree 
+ * Implementation of a generic Binary Search Tree
  * 
  * @author Sebastian Garcia Acosta
  * @param <T>, any class that implements the Comparable interface
  */
-public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T> {
+public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>, Tree<T> {
 	/**
 	 * This class represents the node of the BST.
 	 * 
@@ -208,7 +208,7 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T> {
 
 	/** Number of modes in tree */
 	private int numberOfElements;
-	
+
 	/** Whether to allow duplicate nodes */
 	private boolean allowDuplicates;
 
@@ -220,7 +220,7 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T> {
 		this.numberOfElements = 0;
 		this.allowDuplicates = false;
 	}
-	
+
 	/**
 	 * Constructor
 	 */
@@ -229,7 +229,7 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T> {
 		this.numberOfElements = 0;
 		this.allowDuplicates = allowDuplicates;
 	}
-	 
+
 	/**
 	 * Adds all the elements from the collection to the Tree
 	 * 
@@ -323,21 +323,22 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T> {
 	 * 
 	 * @param data
 	 */
-	public void add(T data) {
+	@Override
+	public boolean add(T data) {
 		Node<T> newNode = new Node<>(data);
+		boolean done = false;
 		boolean duplicate = false;
-		boolean added = false;
-
+		
 		if (root == null) {
 			root = newNode;
 		} else {
 			Node<T> currentNode = root;
-			while (!added && !duplicate) {
+			while (!done) {
 				if (newNode.isLessThan(currentNode)) {
 					if (currentNode.left == null) {
 						newNode.parent = currentNode;
 						currentNode.left = newNode;
-						added = true;
+						done = true;
 					} else {
 						currentNode = currentNode.left;
 					}
@@ -345,18 +346,39 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T> {
 					if (currentNode.right == null) {
 						newNode.parent = currentNode;
 						currentNode.right = newNode;
-						added = true;
+						done = true;
 					} else {
 						currentNode = currentNode.right;
 					}
 				} else {
-					duplicate = true;
+					if( allowDuplicates ) {
+						if (currentNode.right == null) {
+							newNode.parent = currentNode;
+							currentNode.right = newNode;
+							done = true;
+						} else {
+							currentNode = currentNode.right;
+						}						
+					} else {
+						done = true;
+						duplicate = true;
+					}
 				}
 			}
 		}
-
-		if (!duplicate)
+		
+		if((allowDuplicates && duplicate) || !(allowDuplicates || duplicate)) 
 			numberOfElements++;
+		
+		return true;
+	}
+
+	public void add2Right(Node<T> newNode, Node<T> currentNode) {
+		
+	}
+	
+	public void add2Left() {
+		
 	}
 	
 	public Node<T> getMaximum(Node<T> localRoot) {
@@ -373,9 +395,12 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T> {
 		return currentNode;
 	}
 
-	public void delete(T data) {
+	@Override
+	public T delete(T data) {
+		T deleted = null;
 		if (root != null) {
 			if (data.compareTo(root.data) == 0) { // If the root is the element that we want to delete
+				deleted = root.data;
 				if (root.isLeafNode())
 					root = null;
 				else if (root.hasOnlyOneChild())
@@ -384,11 +409,24 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T> {
 					root.data = root.left.getMaximumNode().delete().data;
 			} else { // If the element to delete is not the root
 				Node<T> nodeFound = searchNode(data);
-				if (nodeFound != null)
+				if (nodeFound != null) {
+					deleted = nodeFound.data;
 					nodeFound.delete();
+				}
 			}
 			numberOfElements--;
 		}
+		return deleted;
+	}
+
+	@Override
+	public int height() {
+		return 0;
+	}
+
+	@Override
+	public int weight() {
+		return numberOfElements;
 	}
 
 	public T getRootData() {
