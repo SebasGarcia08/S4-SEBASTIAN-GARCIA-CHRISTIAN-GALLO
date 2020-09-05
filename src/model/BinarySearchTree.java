@@ -348,16 +348,17 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>, I
 			if (allowDuplicates)
 				addWithDuplicates(newNode);
 			else
-				addWithDuplicates(newNode);
+				addWithoutDuplicates(newNode);
 		}
 		return true;
 	}
 
 	/**
+	 * Adds a node
 	 * 
 	 * @param data
 	 */
-	public boolean addWithDuplicates(Node<T> newNode) {
+	private boolean addWithDuplicates(Node<T> newNode) {
 		boolean done = false;
 
 		Node<T> currentNode = root;
@@ -384,7 +385,13 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>, I
 		return true;
 	}
 
-	public boolean addWithoutDuplicates(Node<T> newNode) {
+	/**
+	 * 
+	 * 
+	 * @param newNode
+	 * @return
+	 */
+	private boolean addWithoutDuplicates(Node<T> newNode) {
 		boolean done = false;
 		boolean duplicate = false;
 		
@@ -410,20 +417,6 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>, I
 			numberOfElements++;
 		
 		return (!duplicate);
-	}
-
-	public Node<T> getMaximum(Node<T> localRoot) {
-		Node<T> currentNode = localRoot;
-		while (currentNode.right != null)
-			currentNode = currentNode.right;
-		return currentNode;
-	}
-
-	public Node<T> getMinimum(Node<T> localRoot) {
-		Node<T> currentNode = localRoot;
-		while (currentNode.left != null)
-			currentNode = currentNode.left;
-		return currentNode;
 	}
 
 	@Override
@@ -486,14 +479,6 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>, I
 
 	@Override
 	public int weight() {
-		return numberOfElements;
-	}
-
-	public T getRootData() {
-		return this.root.data;
-	}
-
-	public int getNumberOfElements() {
 		return numberOfElements;
 	}
 
