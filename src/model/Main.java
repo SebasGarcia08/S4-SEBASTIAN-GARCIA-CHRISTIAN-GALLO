@@ -1,26 +1,20 @@
 package model;
 
-import java.util.function.Consumer;
-
 public class Main {
 	
 	public static void main(String[] args) {
 		BinarySearchTree<Integer> bst = new BinarySearchTree<>(false);
-		bst.addAll(1,2,3,4,5,5,5,6,87,87,65,3,42,45,43,2);
-		Consumer<Integer> printer = (e) -> System.out.print(e + " ");
+		bst.addAll(40, 20, 60, 10, 30, 50, 70, 75);
 		
-		System.out.print("Inorder: ");
-		bst.inorder().forEach(printer);
-		System.out.print("\n");		
-
-		System.out.print("Preorder: ");
-		bst.preorder().forEach(printer); 
-		System.out.print("\n");		
-
-		System.out.print("PostOrder: ");
-		bst.postorder().forEach(printer); 		
+		bst.print2D();
+		System.out.println(bst.height());
+		System.out.println(bst.weight());		
 		
-		for(Integer data : bst)
-			System.out.println(data);
+		bst.delete(40);
+		bst.delete(30);
+		bst.delete(20);
+		bst.delete(10);
+		bst.print2D();
+
 	}
 }

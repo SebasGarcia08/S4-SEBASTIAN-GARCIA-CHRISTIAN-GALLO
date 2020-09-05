@@ -8,7 +8,7 @@ import java.util.Stack;
 
 /**
  * Implementation of a generic Binary Search Tree
- * 
+ * @author Christian Gallo Pelaez
  * @author Sebastian Garcia Acosta
  * @param <T>, any class that implements the Comparable interface
  */
@@ -344,6 +344,7 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>, I
 		Node<T> newNode = new Node<>(data);
 		if (root == null) {
 			root = newNode;
+			numberOfElements++;
 		} else {
 			if (allowDuplicates)
 				addWithDuplicates(newNode);
