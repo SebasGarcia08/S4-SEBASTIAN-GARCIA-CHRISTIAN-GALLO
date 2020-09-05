@@ -12,7 +12,7 @@ import java.util.Stack;
  * @author Sebastian Garcia Acosta
  * @param <T>, any class that implements the Comparable interface
  */
-public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>, Tree<T> {
+public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>, IBinarySearchTree<T> {
 	/**
 	 * This class represents the node of the BST.
 	 * 
@@ -138,6 +138,26 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>, T
 			while (curr.left != null)
 				curr = curr.left;
 			return curr;
+		}
+
+		public boolean add2RightOf(Node<T> another) {
+			boolean added = false;
+			if (another.right == null) {
+				this.parent = another;
+				another.right = this;
+				added = true;
+			}
+			return added;
+		}
+
+		public boolean add2LeftOf(Node<T> another) {
+			boolean added = false;
+			if (another.left == null) {
+				this.parent = another;
+				another.left = this;
+				added = true;
+			}
+			return added;
 		}
 
 		/**
@@ -319,68 +339,79 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>, T
 		return found == null;
 	}
 
+	@Override
+	public boolean add(T data) {
+		Node<T> newNode = new Node<>(data);
+		if (root == null) {
+			root = newNode;
+		} else {
+			if (allowDuplicates)
+				addWithDuplicates(newNode);
+			else
+				addWithDuplicates(newNode);
+		}
+		return true;
+	}
+
 	/**
 	 * 
 	 * @param data
 	 */
-	@Override
-	public boolean add(T data) {
-		Node<T> newNode = new Node<>(data);
+	public boolean addWithDuplicates(Node<T> newNode) {
 		boolean done = false;
-		boolean duplicate = false;
-		
-		if (root == null) {
-			root = newNode;
-		} else {
-			Node<T> currentNode = root;
-			while (!done) {
-				if (newNode.isLessThan(currentNode)) {
-					if (currentNode.left == null) {
-						newNode.parent = currentNode;
-						currentNode.left = newNode;
-						done = true;
-					} else {
-						currentNode = currentNode.left;
-					}
-				} else if (newNode.isGreaterThan(currentNode)) {
-					if (currentNode.right == null) {
-						newNode.parent = currentNode;
-						currentNode.right = newNode;
-						done = true;
-					} else {
-						currentNode = currentNode.right;
-					}
-				} else {
-					if( allowDuplicates ) {
-						if (currentNode.right == null) {
-							newNode.parent = currentNode;
-							currentNode.right = newNode;
-							done = true;
-						} else {
-							currentNode = currentNode.right;
-						}						
-					} else {
-						done = true;
-						duplicate = true;
-					}
-				}
+
+		Node<T> currentNode = root;
+		while (!done) {
+			if (newNode.isLessThan(currentNode)) {
+				if (newNode.add2LeftOf(currentNode))
+					done = true;
+				else
+					currentNode = currentNode.left;
+			} else if (newNode.isGreaterThan(currentNode)) {
+				if (newNode.add2RightOf(currentNode))
+					done = true;
+				else
+					currentNode = currentNode.right;
+			} else {
+				if (newNode.add2RightOf(currentNode))
+					done = true;
+				else
+					currentNode = currentNode.right;
 			}
 		}
-		
-		if((allowDuplicates && duplicate) || !(allowDuplicates || duplicate)) 
-			numberOfElements++;
-		
+
+		numberOfElements++;
 		return true;
 	}
 
-	public void add2Right(Node<T> newNode, Node<T> currentNode) {
+	public boolean addWithoutDuplicates(Node<T> newNode) {
+		boolean done = false;
+		boolean duplicate = false;
 		
-	}
-	
-	public void add2Left() {
+		Node<T> currentNode = root;
+		while (!done) {
+			if (newNode.isLessThan(currentNode)) {
+				if (newNode.add2LeftOf(currentNode))
+					done = true;
+				else
+					currentNode = currentNode.left;
+			} else if (newNode.isGreaterThan(currentNode)) {
+				if (newNode.add2RightOf(currentNode))
+					done = true;
+				else
+					currentNode = currentNode.right;
+			} else {
+				done = true;
+				duplicate = true;
+			}
+		}
 		
+		if(!duplicate) 
+			numberOfElements++;
+		
+		return (!duplicate);
 	}
-	
+
 	public Node<T> getMaximum(Node<T> localRoot) {
 		Node<T> currentNode = localRoot;
 		while (currentNode.right != null)

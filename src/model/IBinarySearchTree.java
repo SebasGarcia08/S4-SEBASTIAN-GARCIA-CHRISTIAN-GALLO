@@ -2,7 +2,7 @@ package model;
 
 import java.util.List;
 
-public interface Tree<T extends Comparable<T>> {
+public interface IBinarySearchTree<T extends Comparable<T>> {
 
 	public boolean add(T data);
 
