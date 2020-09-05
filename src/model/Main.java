@@ -19,5 +19,8 @@ public class Main {
 
 		System.out.print("PostOrder: ");
 		bst.postorder().forEach(printer); 		
+		
+		for(Integer data : bst)
+			System.out.println(data);
 	}
 }
