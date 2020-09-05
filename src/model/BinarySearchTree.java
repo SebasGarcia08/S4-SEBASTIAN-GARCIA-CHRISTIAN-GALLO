@@ -354,7 +354,7 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>, I
 	}
 
 	/**
-	 * Adds a node
+	 * Adds a node to the BST with duplicated nodes
 	 * 
 	 * @param data
 	 */
@@ -386,15 +386,15 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>, I
 	}
 
 	/**
-	 * 
+	 * Adds a Node to a BST without duplicated nodes. 
 	 * 
 	 * @param newNode
-	 * @return
+	 * @return boolean True if the node was added
 	 */
 	private boolean addWithoutDuplicates(Node<T> newNode) {
 		boolean done = false;
 		boolean duplicate = false;
-		
+
 		Node<T> currentNode = root;
 		while (!done) {
 			if (newNode.isLessThan(currentNode)) {
@@ -412,13 +412,19 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>, I
 				duplicate = true;
 			}
 		}
-		
-		if(!duplicate) 
+
+		if (!duplicate)
 			numberOfElements++;
-		
+
 		return (!duplicate);
 	}
 
+	/**
+	 * Deletes a node
+	 * 
+	 * @param data
+	 * @return T Node deleted or null if it does not exist.
+	 */
 	@Override
 	public T delete(T data) {
 		T deleted = null;
@@ -443,55 +449,72 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>, I
 		return deleted;
 	}
 
+	/**
+	 * Calculates de height of the BST
+	 * 
+	 * @return int Height of the BST
+	 */
 	@Override
 	public int height() {
 		return height(root);
 	}
-	
+
 	private int height(Node<T> node) {
-		
+
 		int treeHeight = 0;
-		
-		if(node != null) {
-			
+
+		if (node != null) {
+
 			treeHeight++;
-			
+
 			int heightLeft = 0;
-			if(node.left != null) {
+			if (node.left != null) {
 				heightLeft = height(node.left);
 			}
-			
+
 			int heightRight = 0;
-			if(node.right != null) {
+			if (node.right != null) {
 				heightRight = height(node.right);
 			}
-			
-			if(heightLeft > heightRight) {
+
+			if (heightLeft > heightRight) {
 				treeHeight += heightLeft;
-			}else {
+			} else {
 				treeHeight += heightRight;
 			}
-			
+
 		}
-		
+
 		return treeHeight;
 	}
 
+	/**
+	 * Calculates the weight of the BST
+	 * 
+	 * @return int Weight of the BST
+	 */
 	@Override
 	public int weight() {
 		return numberOfElements;
 	}
 
-	public void reset() {
-		this.root = null;
-	}
-
+	/**
+	 * Returns a list of the nodes of the BST in inorder
+	 * 
+	 * @return List<T> Nodes list
+	 */
 	public List<T> inorder() {
 		List<T> list = new ArrayList<>();
 		inorder(root, list);
 		return list;
 	}
 
+	/**
+	 * Iterates the BST in inorder recursively
+	 * 
+	 * @param root BST root
+	 * @param list
+	 */
 	private void inorder(Node<T> root, List<T> list) {
 		if (root != null) {
 			inorder(root.left, list);
@@ -500,12 +523,24 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>, I
 		}
 	}
 
+	/**
+	 * Returns a list of nodes of the BST in preorder
+	 * 
+	 * @return List<T> Nodes list
+	 */
 	public List<T> preorder() {
 		List<T> list = new ArrayList<>();
 		preorder(root, list);
 		return list;
 	}
-
+	
+	
+	/**
+	 * Iterates the BST in preorder recursively
+	 * 
+	 * @param root BST root
+	 * @param list
+	 */
 	private void preorder(Node<T> root, List<T> list) {
 		if (root != null) {
 			list.add(root.data);
@@ -514,12 +549,23 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>, I
 		}
 	}
 
+	/**
+	 * Returns a list of nodes of the BST in postorder
+	 * 
+	 * @return List<T> Nodes list
+	 */
 	public List<T> postorder() {
 		List<T> list = new ArrayList<>();
 		postorder(root, list);
 		return list;
 	}
-
+	
+	/***
+	 * Iterates the BST in postorder recursively
+	 * 
+	 * @param root BST root
+	 * @param list
+	 */
 	private void postorder(Node<T> root, List<T> list) {
 		if (root != null) {
 			postorder(root.left, list);
@@ -528,6 +574,11 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>, I
 		}
 	}
 
+	/**
+	 * Returns an inorder iterator
+	 * 
+	 * @return Iterator<T>
+	 */
 	@Override
 	public Iterator<T> iterator() {
 		return new InorderIterator();
