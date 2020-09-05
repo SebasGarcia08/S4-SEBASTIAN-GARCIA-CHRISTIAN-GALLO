@@ -421,7 +421,36 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>, T
 
 	@Override
 	public int height() {
-		return 0;
+		return height(root);
+	}
+	
+	private int height(Node<T> node) {
+		
+		int treeHeight = 0;
+		
+		if(node != null) {
+			
+			treeHeight++;
+			
+			int heightLeft = 0;
+			if(node.left != null) {
+				heightLeft = height(node.left);
+			}
+			
+			int heightRight = 0;
+			if(node.right != null) {
+				heightRight = height(node.right);
+			}
+			
+			if(heightLeft > heightRight) {
+				treeHeight += heightLeft;
+			}else {
+				treeHeight += heightRight;
+			}
+			
+		}
+		
+		return treeHeight;
 	}
 
 	@Override
